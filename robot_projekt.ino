@@ -187,7 +187,7 @@ private:
             switch (ReceiveDataBuffer[i])
             {
             case 0:
-                manuel.Drive(ReceiveDataBuffer[++i], ReceiveDataBuffer[++i]);
+                manuel.Drive(ReceiveDataBuffer[++i], ReceiveDataBuffer[2]);
                 break;
             case 1:
                 manuel.Squash(ReceiveDataBuffer[++i]);
@@ -282,7 +282,7 @@ void AutomaticMode()
         switch (aState) 
 		{
         case OPGAVE_1:
-
+			fremdrift.drive(30, 170);
             aState = OPGAVE_2;
             break;
         case OPGAVE_2:
