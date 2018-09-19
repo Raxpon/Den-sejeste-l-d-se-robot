@@ -26,6 +26,8 @@ MeLineFollower LFollower;       // Line follower
 enum AUTOSTATE { OPGAVE_1, OPGAVE_2, OPGAVE_3, OPGAVE_4, OPGAVE_5, OPGAVE_6, NOTHING };
 
 AUTOSTATE aState; // vores enum bruges til automatisk program
+int timer = 0;
+int drivenLenght = 0;
 
 #pragma endregion
 void isr_process_encoder1(void)
@@ -254,8 +256,21 @@ class eFremdrift
 	public:
 		void drive(float lenght, int motorspeed)
 		{
-			EmL.moveTo(-2.2 * 360 * lenght / (6.3*PI), motorspeed);
-			EmR.moveTo(2.2 * 360 * lenght / (6.3*PI), motorspeed);
+			float tid = 45 * lenght * 60 / (6.3 * PI * motorspeed);
+			EmL.moveTo(-2.2 * 360 * (lenght + drivenLenght) / (6.3 * PI), motorspeed);
+			EmR.moveTo(2.2 * 360 * (lenght + drivenLenght) / (6.3 * PI), motorspeed);
+
+			for (timer = 0; timer < tid; timer++) 
+			{
+				Serial.println(timer);
+				Serial.println(drivenLenght);
+				EmR.loop();
+				EmL.loop();
+				delay(100);
+			}
+			timer = 0;
+			drivenLenght = lenght + drivenLenght;
+
 		}
 };
 
@@ -282,7 +297,19 @@ void AutomaticMode()
         switch (aState) 
 		{
         case OPGAVE_1:
-			fremdrift.drive(30, 170);
+			 if (timer != 0) 
+			{
+				timer = 0;
+			}
+			for(timer= 0;timer < 40;timer++) 
+			{
+				EmR.loop();
+				EmL.loop();
+				eFremdrift.drive(43, 130);
+				delay(100);
+
+			}
+			
             aState = OPGAVE_2;
             break;
         case OPGAVE_2:
