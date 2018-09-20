@@ -305,7 +305,7 @@ void AutomaticMode()
 			{
 				EmR.loop();
 				EmL.loop();
-				eFremdrift.drive(43, 130);
+				fremdrift.drive(43, 130);
 				delay(100);
 
 			}
